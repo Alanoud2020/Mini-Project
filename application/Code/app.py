@@ -1,17 +1,57 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import pymysql.cursors
+from flask import Flask
+#from flask_jwt import JWT, jwt_required, current_identity
+#from werkzeug.security import safe_str_cmp
+from flask import Flask
+from flask import jsonify
+from flask import request
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
+# creates Flask object
+app = Flask(__name__)
+# configuration
+# NEVER HARDCODE YOUR CONFIGURATION IN YOUR CODE
+# INSTEAD CREATE A .env FILE AND STORE IN IT
+app.config['SECRET_KEY'] = 'test123'
+jwt = JWTManager(app)
+
+
+# Create a route to authenticate your users and return JWTs. The
+# create_access_token() function is used to actually generate the JWT.
+@app.route("/login1", methods=["POST"])
+def login1():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    if username != "test" or password != "test":
+        return jsonify({"msg": "Bad username or password"}), 401
+
+    access_token = create_access_token(identity=username)
+    return jsonify(access_token=access_token)
+
+
+# Protect a route with jwt_required, which will kick out requests
+# without a valid JWT present.
+@app.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
+
+
 
 # Connect to the database
-#connection = pymysql.connect(host='localhost',
-#                             user='root',
-#                             password='',
-#                             db='app_test',
-#                             charset='utf8mb4',
-#                             cursorclass=pymysql.cursors.DictCursor)
+connection = pymysql.connect(host='localhost',
+                             user='zezo',
+                             password='test123',
+                             db='app_test',
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor,autocommit=True)
 
-connection=''
 
-app = Flask(__name__)
 
 
 @app.route('/')
@@ -29,9 +69,9 @@ def home_user():
     return render_template("home_user.html")
 
 
-@app.route('/addPapers')
-def add_papers_page():
-    return render_template("add_papers.html", success='')
+#@app.route('/addPapers')
+#def add_papers_page():
+#    return render_template("add_papers.html", success='')
 
 
 @app.route('/addAuthors')
@@ -496,6 +536,9 @@ def sota_by_topic():
     except Exception as e:
         return render_template("sota_by_topic.html", items=[], cols=[], success='Can\'t view Results: ' + str(e))
 
+app.debug = True
+
 
 if __name__ == '__main__':
+
     app.run()
