@@ -1,6 +1,6 @@
 # Mini-Project
 
-Project Description In this project, you will implement a UI that displays results in computer science.
+Implementing an UI that displays results in computer science.
 
 # PROPERTIES
 
