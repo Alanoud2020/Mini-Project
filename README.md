@@ -18,6 +18,25 @@ There will be Users, papers and Subject in the system. These entities will have 
   • Only admins shall be able to add/update/delete papers, authors and topics.  
   • Users shall be able to separately view all authors, papers and topics in the system.
   • Users shall be able to view all papers of an author. 
-  • Users shall be able to view  result by topic and which paper this  was achieved.  
+  • Users shall be able to view  result by topic and which paper this  was achieved. 
   • Users shall be able to view papers on a specific topic. 
 
+
+## CHANGE DATABASE SETTINGS:
+
+As per the need we can change the DB to any on the following file app.py
+
+    connection = pymysql.connect(host='localhost',
+                             user='root',
+                             password='',
+                             db='app_test',
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+
+
+## FILE DESCRIPTION
+
+    Templates: 
+	    In /Code/templates
+	Static:
+	    In  /Code/static
